@@ -1,0 +1,10 @@
+SASS
+
+
+sass input.scss output.css
+sass --watch input.scss output.css
+sass --watch app/sass:public/stylesheets
+
+sass assets/scss/dis.scss assets/client/css/dis.css
+sass --watch assets/scss/dis.scss assets/client/css/dis.css
+sass --watch assets/scss:assets/client/css
