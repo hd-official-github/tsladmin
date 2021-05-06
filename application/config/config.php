@@ -25,7 +25,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 // $config['base_url'] = 'http://localhost/elkay';
 if ($_SERVER['SERVER_NAME'] == 'localhost') {
-	$config['base_url'] = 'http://localhost/tsl_admin';
+	$config['base_url'] = 'http://localhost/tsl_admin/';
 } else {
 	$config['base_url'] = '';
 }

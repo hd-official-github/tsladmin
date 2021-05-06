@@ -46,7 +46,7 @@ class Admin extends CI_Controller
     }
     public function dashboard()
     {
-        
+
         $this->verify_session();
         $this->load->view('admin/header');
         $this->load->view('admin/dashboard');
@@ -314,6 +314,34 @@ class Admin extends CI_Controller
             redirect(base_url() . 'admin/location');
         }
     }
+    public function edit_sub_location()
+    {
+        $id = $this->uri->segment(3);
+        $this->load->model('admin_model');
+        $data['subloc_data'] = $this->admin_model->edit_sub_loc($id);
+        $data['location'] = $this->admin_model->get_all_locs();
+        $this->load->view('admin/header');
+        $this->load->view('admin/edit_sub_location', $data);
+        $this->load->view('admin/footer');
+    }
+    public function update_sub_location()
+    {
+        $this->verify_session();
+        if ($this->input->post('submit')) {
+            $arr = array(
+                'location_name' => $this->input->post('location'),
+                'sub_loc_name' => $this->input->post('sub_loc'),
+                'meta_title' => $this->input->post('meta_title'),
+                'meta_desc' => $this->input->post('meta_desc'),
+            );
+            $this->load->model('admin_model');
+
+            $this->admin_model->update_sublocation($this->input->post('ide'), $arr);
+            redirect(base_url() . 'admin/location');
+        } else {
+            redirect(base_url() . 'admin');
+        }
+    }
     public function submit_sub_location()
     {
         $this->verify_session();
@@ -347,7 +375,7 @@ class Admin extends CI_Controller
                 echo ('<div class="card-content">
                     ' . $row->sub_loc_name . '
                     <div class="options">
-                        <a href="" class="actions w-inline-block"><img src="' . base_url()
+                        <a href="' . base_url() . 'admin/edit_sub_location/' . $row->id . '" class="actions w-inline-block"><img src="' . base_url()
                     . 'assets/images/edit.png" loading="lazy" width="33" alt="" /></a>
                         <a href="' . base_url()
                     . 'admin/del_sub_loc_by_id/' . $row->id . '" class="actions w-inline-block"><img src="' . base_url()
@@ -391,13 +419,12 @@ class Admin extends CI_Controller
     public function add_category()
     {
         $this->verify_session();
-        
+
         $this->load->model('admin_model');
         $data['location'] = $this->admin_model->get_all_loc();
         $this->load->view('admin/header');
-        $this->load->view('admin/add_category',$data);
+        $this->load->view('admin/add_category', $data);
         $this->load->view('admin/footer');
-    
     }
     public function edit_category()
     {
@@ -453,7 +480,7 @@ class Admin extends CI_Controller
                     'icon_name' => $data['raw_name'] . $data['file_ext'],
                     'icon_alt' => $this->input->post('icon_alt'),
                     'footer_content' => $this->input->post('footer_category_content'),
-                    'location'=>$this->input->post('location')
+                    'location' => $this->input->post('location')
                 );
                 $this->load->model('admin_model');
                 $this->admin_model->upload_category($d);
@@ -692,8 +719,8 @@ class Admin extends CI_Controller
                     'location' => $this->input->post('location'),
                     'sub_location' => $this->input->post('sub_location'),
                     'about' => $this->input->post('about_business'),
-                    'mobno'=>$this->input->post('mobno'),
-                    'email'=>$this->input->post('email'),
+                    'mobno' => $this->input->post('mobno'),
+                    'email' => $this->input->post('email'),
 
                     'main_image' => $sign,
                     'main_img_name' => $d['raw_name'] . $d['file_ext'],
@@ -923,7 +950,7 @@ class Admin extends CI_Controller
                 'business_id' => $this->input->post('business'),
                 'question' => $this->input->post('question'),
                 'answer' => $this->input->post('answer'),
-                
+
             );
             $this->load->model('admin_model');
             $this->admin_model->upload_faq($d);
@@ -931,36 +958,35 @@ class Admin extends CI_Controller
         } else {
             redirect(base_url() . 'admin/list');
         }
-        
     }
     public function add_features()
     {
         $this->verify_session();
         $this->load->view('admin/header');
         $this->load->model('admin_model');
-        
+
         $data['loc_list'] = $this->admin_model->get_location();
-    
+
         //$id = $this->admin_model->get_business_id();
         // $ids=array();
         // foreach($id->result() as $row){
         //     $ids[] =$row->business_id; 
         // }    
-        
+
         //$data['features'] = $this->admin_model->get_features($ids);
-        $this->load->view('admin/add_features',$data);
+        $this->load->view('admin/add_features', $data);
         $this->load->view('admin/footer');
     }
-    
+
     public function add_features1()
     {
         $this->verify_session();
         $this->load->view('admin/header');
         $this->load->model('admin_model');
-        
+
         $data['loc_list'] = $this->admin_model->get_location();
         $data['business'] = $this->admin_model->get_business();
-        
+
 
         $this->load->view('admin/add_features1', $data);
         $this->load->view('admin/footer');
@@ -972,7 +998,7 @@ class Admin extends CI_Controller
             $d = array(
                 'business_id' => $this->input->post('business'),
                 'location' => $this->input->post('location'),
-                
+
             );
             $this->load->model('admin_model');
             $this->admin_model->upload_features($d);
@@ -993,10 +1019,10 @@ class Admin extends CI_Controller
         $this->verify_session();
         $this->load->view('admin/header');
         $this->load->model('admin_model');
-        
+
         $data['loc_list'] = $this->admin_model->get_location();
         $data['business'] = $this->admin_model->get_business();
-        
+
 
         $this->load->view('admin/add_features2', $data);
         $this->load->view('admin/footer');
@@ -1008,7 +1034,7 @@ class Admin extends CI_Controller
             $d = array(
                 'business_id' => $this->input->post('business'),
                 'location' => $this->input->post('location'),
-                
+
             );
             $this->load->model('admin_model');
             $this->admin_model->upload_features2($d);
@@ -1020,20 +1046,20 @@ class Admin extends CI_Controller
     public function getfeature()
     {
         $this->verify_session();
-       $loc = $this->input->post('location');
-       $feature = $this->input->post('feature');
-       if($feature==1){
-           $table = "business_feature";
-       }else{
-           $table="business_feature2";
-       }
-       $this->load->model('admin_model');
-       $data['loc_list'] = $this->admin_model->get_location();
+        $loc = $this->input->post('location');
+        $feature = $this->input->post('feature');
+        if ($feature == 1) {
+            $table = "business_feature";
+        } else {
+            $table = "business_feature2";
+        }
+        $this->load->model('admin_model');
+        $data['loc_list'] = $this->admin_model->get_location();
 
-       $res = $this->admin_model->getfeature_first($loc,$table);
-       if($res->num_rows()){
-       foreach ($res->result() as $row) {
-        echo '<div class="blog-list">
+        $res = $this->admin_model->getfeature_first($loc, $table);
+        if ($res->num_rows()) {
+            foreach ($res->result() as $row) {
+                echo '<div class="blog-list">
                     <div class="bleft">
                         <p class="paragraph-5">' . $row->business_name . '</p>
                     </div>
@@ -1042,170 +1068,158 @@ class Admin extends CI_Controller
                         <a href="' . base_url() . 'admin/delete_feature/' . $row->business_id . '" class="actions w-inline-block"><img src="' . base_url() . 'assets/images/delete.png" loading="lazy" width="32" sizes="(max-width: 479px) 100vw, 32px" alt="" /></a>
                     </div>
                </div>';
-    }
-}else{
-    echo '<div class="blog-list"><div class="bleft" style="padding:10px;"><p class="paragraph-5">Sorry!! Do data is available</p></div></div>';
-}
-   
-    }
-
-   
-public function add_banners()
-{
-    $this->verify_session();
-    $this->load->view('admin/header');
-    $this->load->view('admin/add_banners');
-    $this->load->view('admin/footer');
-}
-public function add_banner1()
-{
-    $this->verify_session();
-    $this->load->model('admin_model');
-    $data['loc_list'] = $this->admin_model->get_location();
-    $this->load->view('admin/header');
-    $this->load->view('admin/add_banner1',$data);
-    $this->load->view('admin/footer');
-
-}
-public function add_banner2()
-{
-    $this->verify_session();
-    $this->load->model('admin_model');
-    $data['loc_list'] = $this->admin_model->get_location();
-    $this->load->view('admin/header');
-    $this->load->view('admin/add_banner2',$data);
-    $this->load->view('admin/footer');
-
-}
-public function submit_banner1()
-{
-    $this->verify_session();
-    if ($this->input->post('submit')) {
-
-        $config3['upload_path'] = './uploads/banners';   // Directory 
-        $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
-        $config3['max_size'] = '30720';   //Max Size
-        $this->load->library('upload', $config3);  //File Uploading library
-        $this->upload->initialize($config3);
-        if ($this->upload->do_upload('main_img_desktop')) {
-            $d = $this->upload->data();
-            $desk = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
-            $desk_name= $d['raw_name']. $d['file_ext'];
-
-
-            
+            }
+        } else {
+            echo '<div class="blog-list"><div class="bleft" style="padding:10px;"><p class="paragraph-5">Sorry!! Do data is available</p></div></div>';
         }
-        if($this->upload->do_upload('main_img_mobile')){
-            $d = $this->upload->data();
-            $mob = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
-            $mob_name= $d['raw_name']. $d['file_ext'];
-        }
-             $data= array(
-                 'img_alt_desktop'=>$this->input->post('img_alt_desktop'),
-                 'img_alt_mobile'=>$this->input->post('img_alt_mobile'),
-                  'img_name_desktop'=>$desk_name,
-                  'img_name_mobile'=>$mob_name,
-                  'img_url_desk'=>$desk,
-                  'img_url_mob'=> $mob,
-                  'location'=>$this->input->post('location')
+    }
 
-             );   
+
+    public function add_banners()
+    {
+        $this->verify_session();
+        $this->load->view('admin/header');
+        $this->load->view('admin/add_banners');
+        $this->load->view('admin/footer');
+    }
+    public function add_banner1()
+    {
+        $this->verify_session();
         $this->load->model('admin_model');
-        $this->admin_model->submit_banner1($data);
-       redirect(base_url().'admin/add_banner1');
-        
-    }else{
-        redirect(base_url().'admin/add_banners');
+        $data['loc_list'] = $this->admin_model->get_location();
+        $this->load->view('admin/header');
+        $this->load->view('admin/add_banner1', $data);
+        $this->load->view('admin/footer');
     }
-
-}
-public function submit_banner2()
-{
-    $this->verify_session();
-    if ($this->input->post('submit')) {
-
-        $config3['upload_path'] = './uploads/banners';   // Directory 
-        $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
-        $config3['max_size'] = '30720';   //Max Size
-        $this->load->library('upload', $config3);  //File Uploading library
-        $this->upload->initialize($config3);
-        if ($this->upload->do_upload('main_img_desktop')) {
-            $d = $this->upload->data();
-            $desk = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
-            $desk_name= $d['raw_name']. $d['file_ext'];
-
-
-            
-        }
-        if($this->upload->do_upload('main_img_mobile')){
-            $d = $this->upload->data();
-            $mob = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
-            $mob_name= $d['raw_name']. $d['file_ext'];
-        }
-             $data= array(
-                 'img_alt_desktop'=>$this->input->post('img_alt_desktop'),
-                 'img_alt_mobile'=>$this->input->post('img_alt_mobile'),
-                 'img_name_desktop'=>$desk_name,
-                 'img_name_mobile'=>$mob_name,
-                 'img_url_desk'=>$desk,
-                 'img_url_mob'=> $mob,
-                 'location'=>$this->input->post('location')
-
-             );   
+    public function add_banner2()
+    {
+        $this->verify_session();
         $this->load->model('admin_model');
-        $this->admin_model->submit_banner2($data);
-       redirect(base_url().'admin/add_banner2');
-        
-    }else{
-        redirect(base_url().'admin/add_banners');
+        $data['loc_list'] = $this->admin_model->get_location();
+        $this->load->view('admin/header');
+        $this->load->view('admin/add_banner2', $data);
+        $this->load->view('admin/footer');
     }
-}
-public function add_feature_blog()
-{
-    $this->verify_session();
-    $this->load->view('admin/header');
-    $this->load->model('admin_model');
-    $data['loc'] = $this->admin_model->get_location();
-    
-    $this->load->view('admin/add_feature_blog', $data);
-    $this->load->view('admin/footer');
-}
-public function submit_feature_blog()
-{
-    $this->verify_session();
-    if ($this->input->post('submit')) {
-        $config3['upload_path'] = './uploads/blogs';   // Directory 
-        $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
-        $config3['max_size'] = '30720';   //Max Size
-        
-        $this->load->library('upload', $config3);  //File Uploading library
-        $this->upload->initialize($config3);
-        if ($this->upload->do_upload('userfile')) {
-            $data = $this->upload->data();
-            $sign = base_url() . "uploads/blogs/" . $data['raw_name'] . $data['file_ext'];
-            $d = array(
-               'slug'=>$this->input->post('url_slug'),
-                'location' => $this->input->post('loc'),
-                'meta_title' => $this->input->post('meta_title'),
-                'meta_desc' => $this->input->post('meta_desc'),
-                'blog_desc' => $this->input->post('blogdesc'),
-                'image_alt' => $this->input->post('imgalt'),
-                'blog_img' => $sign,
-                'blog_img_name' => $data['raw_name'] . $data['file_ext']
+    public function submit_banner1()
+    {
+        $this->verify_session();
+        if ($this->input->post('submit')) {
+
+            $config3['upload_path'] = './uploads/banners';   // Directory 
+            $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
+            $config3['max_size'] = '30720';   //Max Size
+            $this->load->library('upload', $config3);  //File Uploading library
+            $this->upload->initialize($config3);
+            if ($this->upload->do_upload('main_img_desktop')) {
+                $d = $this->upload->data();
+                $desk = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                $desk_name = $d['raw_name'] . $d['file_ext'];
+            }
+            if ($this->upload->do_upload('main_img_mobile')) {
+                $d = $this->upload->data();
+                $mob = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                $mob_name = $d['raw_name'] . $d['file_ext'];
+            }
+            $data = array(
+                'img_alt_desktop' => $this->input->post('img_alt_desktop'),
+                'img_alt_mobile' => $this->input->post('img_alt_mobile'),
+                'img_name_desktop' => $desk_name,
+                'img_name_mobile' => $mob_name,
+                'img_url_desk' => $desk,
+                'img_url_mob' => $mob,
+                'location' => $this->input->post('location')
+
             );
             $this->load->model('admin_model');
-            $this->admin_model->upload_feature_blog($d);
-            redirect(base_url() . 'admin/add_feature_blog');
+            $this->admin_model->submit_banner1($data);
+            redirect(base_url() . 'admin/add_banner1');
         } else {
-            $d['err'] = "ERROR UPLOADING IMAGE";
-            $this->load->view('admin/header');
-            $this->load->view('admin/add_feature_blog', $d);
-            $this->load->view('admin/footer');
+            redirect(base_url() . 'admin/add_banners');
         }
-    } else {
-        redirect(base_url() . 'admin/add_feature_blog');
     }
-}
+    public function submit_banner2()
+    {
+        $this->verify_session();
+        if ($this->input->post('submit')) {
+
+            $config3['upload_path'] = './uploads/banners';   // Directory 
+            $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
+            $config3['max_size'] = '30720';   //Max Size
+            $this->load->library('upload', $config3);  //File Uploading library
+            $this->upload->initialize($config3);
+            if ($this->upload->do_upload('main_img_desktop')) {
+                $d = $this->upload->data();
+                $desk = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                $desk_name = $d['raw_name'] . $d['file_ext'];
+            }
+            if ($this->upload->do_upload('main_img_mobile')) {
+                $d = $this->upload->data();
+                $mob = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                $mob_name = $d['raw_name'] . $d['file_ext'];
+            }
+            $data = array(
+                'img_alt_desktop' => $this->input->post('img_alt_desktop'),
+                'img_alt_mobile' => $this->input->post('img_alt_mobile'),
+                'img_name_desktop' => $desk_name,
+                'img_name_mobile' => $mob_name,
+                'img_url_desk' => $desk,
+                'img_url_mob' => $mob,
+                'location' => $this->input->post('location')
+
+            );
+            $this->load->model('admin_model');
+            $this->admin_model->submit_banner2($data);
+            redirect(base_url() . 'admin/add_banner2');
+        } else {
+            redirect(base_url() . 'admin/add_banners');
+        }
+    }
+    public function add_feature_blog()
+    {
+        $this->verify_session();
+        $this->load->view('admin/header');
+        $this->load->model('admin_model');
+        $data['loc'] = $this->admin_model->get_location();
+
+        $this->load->view('admin/add_feature_blog', $data);
+        $this->load->view('admin/footer');
+    }
+    public function submit_feature_blog()
+    {
+        $this->verify_session();
+        if ($this->input->post('submit')) {
+            $config3['upload_path'] = './uploads/blogs';   // Directory 
+            $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
+            $config3['max_size'] = '30720';   //Max Size
+
+            $this->load->library('upload', $config3);  //File Uploading library
+            $this->upload->initialize($config3);
+            if ($this->upload->do_upload('userfile')) {
+                $data = $this->upload->data();
+                $sign = base_url() . "uploads/blogs/" . $data['raw_name'] . $data['file_ext'];
+                $d = array(
+                    'slug' => $this->input->post('url_slug'),
+                    'location' => $this->input->post('loc'),
+                    'meta_title' => $this->input->post('meta_title'),
+                    'meta_desc' => $this->input->post('meta_desc'),
+                    'blog_desc' => $this->input->post('blogdesc'),
+                    'image_alt' => $this->input->post('imgalt'),
+                    'blog_img' => $sign,
+                    'blog_img_name' => $data['raw_name'] . $data['file_ext']
+                );
+                $this->load->model('admin_model');
+                $this->admin_model->upload_feature_blog($d);
+                redirect(base_url() . 'admin/add_feature_blog');
+            } else {
+                $d['err'] = "ERROR UPLOADING IMAGE";
+                $this->load->view('admin/header');
+                $this->load->view('admin/add_feature_blog', $d);
+                $this->load->view('admin/footer');
+            }
+        } else {
+            redirect(base_url() . 'admin/add_feature_blog');
+        }
+    }
 
 
 

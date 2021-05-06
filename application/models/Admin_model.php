@@ -58,6 +58,7 @@ class Admin_model extends CI_Model
     }
     function get_location()
     {
+
         return $this->db->get('location');
     }
     function get_location_byname($name)
@@ -78,6 +79,7 @@ class Admin_model extends CI_Model
     function get_sub_location($city)
     {
         $this->db->where('location_name', $city);
+        $this->db->order_by("sub_loc_name", "asc");
         return $this->db->get('sub_location');
     }
     function delete_location($loc)
@@ -226,48 +228,58 @@ class Admin_model extends CI_Model
     }
     function upload_faq($arr)
     {
-        $this->db->insert('business_faq',$arr);
+        $this->db->insert('business_faq', $arr);
     }
     function upload_features($arr)
     {
-        $this->db->insert('business_feature',$arr);
+        $this->db->insert('business_feature', $arr);
     }
     function get_business_id()
     {
-      return $this->db->get('business_feature');
-      
+        return $this->db->get('business_feature');
     }
     function get_features($data)
     {
-        
-         $this->db->where_in('business_id',$data);
-         return $this->db->get('business_list'); 
-        
+
+        $this->db->where_in('business_id', $data);
+        return $this->db->get('business_list');
     }
     function upload_features2($arr)
     {
-        $this->db->insert('business_feature2',$arr);
+        $this->db->insert('business_feature2', $arr);
     }
-    function getfeature_first($loc,$table)
+    function getfeature_first($loc, $table)
     {
         $this->db->select('*');
         $this->db->from('business_list');
-        $this->db->join($table,"$table.business_id = business_list.business_id");
-        $this->db->where('business_list.location',$loc);
+        $this->db->join($table, "$table.business_id = business_list.business_id");
+        $this->db->where('business_list.location', $loc);
         return $this->db->get();
-       
     }
     function submit_banner1($arr)
     {
-        $this->db->insert('business_banner1',$arr);
+        $this->db->insert('business_banner1', $arr);
     }
     function submit_banner2($arr)
     {
-        $this->db->insert('business_banner2',$arr);
+        $this->db->insert('business_banner2', $arr);
     }
     function upload_feature_blog($arr)
     {
-        $this->db->insert('feature_blog',$arr);
+        $this->db->insert('feature_blog', $arr);
     }
-   
+    function edit_sub_loc($id)
+    {
+        $this->db->where('id', $id);
+        return $this->db->get('sub_location');
+    }
+    function get_all_locs()
+    {
+        return $this->db->get('location');
+    }
+    function update_sublocation($id, $arr)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('sub_location', $arr);
+    }
 }
