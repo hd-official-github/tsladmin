@@ -22,6 +22,20 @@
                 </select>
             </div>
             <div class="form-block">
+                <label for="">LOCATION NAME</label>
+                <select name="location_name" style="padding-left: 10px;padding-right: 30px;">
+                    <?php
+                    if ($location->num_rows() > 0) {
+                        foreach ($location->result() as $row) {
+                            echo '<option value="' . $row->location_name . '">' . $row->location_name . ' </option>';
+                        }
+                    } else {
+                        echo '<option default>NO LOCATION FOUND</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="form-block">
                 <label for="">URL SLUG</label>
                 <input type="text" placeholder="SLUG" name="slug" required>
             </div>

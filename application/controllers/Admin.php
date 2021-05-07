@@ -431,12 +431,15 @@ class Admin extends CI_Controller
         $this->verify_session();
         $name = str_replace('-', ' ', $this->uri->segment(3));
         $this->load->model("admin_model");
+        $arr['location'] = $this->admin_model->get_location();
+
         $q = $this->admin_model->get_category_details($name);
         foreach ($q->result() as $row) {
             $arr['arr'] = array(
                 'id' => $row->id,
                 'slug' => $row->slug,
                 'category_name' => $row->category_name,
+                'location_name' => $row->location,
                 'meta_title' => $row->meta_title,
                 'meta_desc' => $row->meta_desc,
                 'icon' => $row->icon,
@@ -455,6 +458,7 @@ class Admin extends CI_Controller
         $this->load->view('admin/header');
         $this->load->model('admin_model');
         $data['category'] = $this->admin_model->get_category();
+        $data['location'] = $this->admin_model->get_location();
         $this->load->view('admin/add_sub_category', $data);
         $this->load->view('admin/footer');
     }
@@ -563,6 +567,7 @@ class Admin extends CI_Controller
                     'sub_category_name' => $this->input->post('subcat'),
                     'meta_title' => $this->input->post('meta_title'),
                     'meta_desc' => $this->input->post('meta_desc'),
+                    'location' => $this->input->post('location_name'),
                     'icon' => $sign,
                     'icon_name' => $d['raw_name'] . $d['file_ext'],
                     'icon_alt' => $this->input->post('icon_alt'),
@@ -573,6 +578,7 @@ class Admin extends CI_Controller
                 redirect(base_url() . 'admin/category');
             } else {
                 $d['err'] = "ERROR UPLOADING IMAGE";
+                $this->load->model('admin_model');
                 $d['category'] = $this->admin_model->get_category();
                 $this->load->view('admin/header');
                 $this->load->view('admin/add_category', $d);
@@ -1220,10 +1226,6 @@ class Admin extends CI_Controller
             redirect(base_url() . 'admin/add_feature_blog');
         }
     }
-
-
-
-
 
     //////////////////////////////////// SESSION END   //////////////////
     public function logout()

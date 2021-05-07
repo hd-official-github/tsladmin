@@ -16,6 +16,22 @@
                 <label for="">CATEGORY NAME</label>
                 <input type="text" placeholder="CATEGORY NAME" name="category_name" required value="<?php echo $arr['category_name']; ?>">
             </div>
+            <div class="form-block">
+                <label for="">LOCATION</label>
+
+                <select name="category" style="padding-left: 10px;padding-right: 30px;">
+                    <option default value="<?php echo $arr['location_name']; ?>"><?php echo $arr['location_name']; ?></option>
+                    <?php
+                    if ($location->num_rows() > 0) {
+                        foreach ($location->result() as $row) {
+                            echo '<option vvalue="' . $row->location_name . '">' . $row->location_name . ' </option>';
+                        }
+                    } else {
+                        echo '<option default>NO LOCATION FOUND</option>';
+                    }
+                    ?>
+                </select>
+            </div>
             <div class=" form-block">
                 <label for="">META TITLE</label>
                 <input type="text" placeholder="Meta Title" name="meta_title" required value="<?php echo $arr['meta_title']; ?>">

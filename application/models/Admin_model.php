@@ -58,7 +58,6 @@ class Admin_model extends CI_Model
     }
     function get_location()
     {
-
         return $this->db->get('location');
     }
     function get_location_byname($name)
