@@ -16,6 +16,7 @@
             </div>
             <div class="form-block">
                 <label for="">SELECT CATEGORY</label>
+                
                 <select name="cat" id="cat">
                     
                 </select>
