@@ -1093,9 +1093,20 @@ class Admin extends CI_Controller
         $this->verify_session();
         $this->load->model('admin_model');
         $data['loc_list'] = $this->admin_model->get_location();
+        // $data['cat'] = $this->admin_model->getcat_by_loc();
         $this->load->view('admin/header');
         $this->load->view('admin/add_banner1', $data);
         $this->load->view('admin/footer');
+    }
+    public function getcat_loc()
+    {
+        $this->verify_session();
+        $this->load->model('admin_model');
+        $data = $this->admin_model->getcat_by_loc($this->input->post('loc'));
+        echo "<option value='' selected>---Select--- </option>";
+        foreach ($data->result() as $row) {
+            echo "<option value='$row->category_name'> $row->category_name </option>";
+        }
     }
     public function add_banner2()
     {
@@ -1110,74 +1121,132 @@ class Admin extends CI_Controller
     {
         $this->verify_session();
         if ($this->input->post('submit')) {
+            if (empty($this->input->post('cat'))) {
+                $config3['upload_path'] = './uploads/banners';   // Directory 
+                $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
+                $config3['max_size'] = '30720';   //Max Size
+                $this->load->library('upload', $config3);  //File Uploading library
+                $this->upload->initialize($config3);
+                if ($this->upload->do_upload('main_img_desktop')) {
+                    $d = $this->upload->data();
+                    $desk = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                    $desk_name = $d['raw_name'] . $d['file_ext'];
+                }
+                if ($this->upload->do_upload('main_img_mobile')) {
+                    $d = $this->upload->data();
+                    $mob = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                    $mob_name = $d['raw_name'] . $d['file_ext'];
+                }
+                $data = array(
+                    'img_alt_desktop' => $this->input->post('img_alt_desktop'),
+                    'img_alt_mobile' => $this->input->post('img_alt_mobile'),
+                    'img_name_desktop' => $desk_name,
+                    'img_name_mobile' => $mob_name,
+                    'img_url_desk' => $desk,
+                    'img_url_mob' => $mob,
+                    'location' => $this->input->post('location')
 
-            $config3['upload_path'] = './uploads/banners';   // Directory 
-            $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
-            $config3['max_size'] = '30720';   //Max Size
-            $this->load->library('upload', $config3);  //File Uploading library
-            $this->upload->initialize($config3);
-            if ($this->upload->do_upload('main_img_desktop')) {
-                $d = $this->upload->data();
-                $desk = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
-                $desk_name = $d['raw_name'] . $d['file_ext'];
-            }
-            if ($this->upload->do_upload('main_img_mobile')) {
-                $d = $this->upload->data();
-                $mob = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
-                $mob_name = $d['raw_name'] . $d['file_ext'];
-            }
-            $data = array(
-                'img_alt_desktop' => $this->input->post('img_alt_desktop'),
-                'img_alt_mobile' => $this->input->post('img_alt_mobile'),
-                'img_name_desktop' => $desk_name,
-                'img_name_mobile' => $mob_name,
-                'img_url_desk' => $desk,
-                'img_url_mob' => $mob,
-                'location' => $this->input->post('location')
+                );
+                $this->load->model('admin_model');
+                $this->admin_model->submit_banner1($data);
+                redirect(base_url() . 'admin/add_banner1');
+            } else {
+                $config3['upload_path'] = './uploads/banners';   // Directory 
+                $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
+                $config3['max_size'] = '30720';   //Max Size
+                $this->load->library('upload', $config3);  //File Uploading library
+                $this->upload->initialize($config3);
+                if ($this->upload->do_upload('main_img_desktop')) {
+                    $d = $this->upload->data();
+                    $desk = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                    $desk_name = $d['raw_name'] . $d['file_ext'];
+                }
+                if ($this->upload->do_upload('main_img_mobile')) {
+                    $d = $this->upload->data();
+                    $mob = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                    $mob_name = $d['raw_name'] . $d['file_ext'];
+                }
+                $data = array(
+                    'img_alt_desktop' => $this->input->post('img_alt_desktop'),
+                    'img_alt_mobile' => $this->input->post('img_alt_mobile'),
+                    'img_name_desktop' => $desk_name,
+                    'img_name_mobile' => $mob_name,
+                    'img_url_desk' => $desk,
+                    'img_url_mob' => $mob,
+                    'cat' => $this->input->post('cat'),
+                    'location' => $this->input->post('location')
 
-            );
-            $this->load->model('admin_model');
-            $this->admin_model->submit_banner1($data);
-            redirect(base_url() . 'admin/add_banner1');
-        } else {
-            redirect(base_url() . 'admin/add_banners');
+                );
+                $this->load->model('admin_model');
+                $this->admin_model->submit_banner1($data);
+                redirect(base_url() . 'admin/add_banner1');
+            }
         }
     }
     public function submit_banner2()
     {
         $this->verify_session();
         if ($this->input->post('submit')) {
+            if (empty($this->input->post('cat'))) {
+                $config3['upload_path'] = './uploads/banners';   // Directory 
+                $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
+                $config3['max_size'] = '30720';   //Max Size
+                $this->load->library('upload', $config3);  //File Uploading library
+                $this->upload->initialize($config3);
+                if ($this->upload->do_upload('main_img_desktop')) {
+                    $d = $this->upload->data();
+                    $desk = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                    $desk_name = $d['raw_name'] . $d['file_ext'];
+                }
+                if ($this->upload->do_upload('main_img_mobile')) {
+                    $d = $this->upload->data();
+                    $mob = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                    $mob_name = $d['raw_name'] . $d['file_ext'];
+                }
+                $data = array(
+                    'img_alt_desktop' => $this->input->post('img_alt_desktop'),
+                    'img_alt_mobile' => $this->input->post('img_alt_mobile'),
+                    'img_name_desktop' => $desk_name,
+                    'img_name_mobile' => $mob_name,
+                    'img_url_desk' => $desk,
+                    'img_url_mob' => $mob,
+                    'location' => $this->input->post('location')
 
-            $config3['upload_path'] = './uploads/banners';   // Directory 
-            $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
-            $config3['max_size'] = '30720';   //Max Size
-            $this->load->library('upload', $config3);  //File Uploading library
-            $this->upload->initialize($config3);
-            if ($this->upload->do_upload('main_img_desktop')) {
-                $d = $this->upload->data();
-                $desk = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
-                $desk_name = $d['raw_name'] . $d['file_ext'];
-            }
-            if ($this->upload->do_upload('main_img_mobile')) {
-                $d = $this->upload->data();
-                $mob = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
-                $mob_name = $d['raw_name'] . $d['file_ext'];
-            }
-            $data = array(
-                'img_alt_desktop' => $this->input->post('img_alt_desktop'),
-                'img_alt_mobile' => $this->input->post('img_alt_mobile'),
-                'img_name_desktop' => $desk_name,
-                'img_name_mobile' => $mob_name,
-                'img_url_desk' => $desk,
-                'img_url_mob' => $mob,
-                'location' => $this->input->post('location')
+                );
+                $this->load->model('admin_model');
+                $this->admin_model->submit_banner2($data);
+                redirect(base_url() . 'admin/add_banner2');
+            } else {
+                $config3['upload_path'] = './uploads/banners';   // Directory 
+                $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
+                $config3['max_size'] = '30720';   //Max Size
+                $this->load->library('upload', $config3);  //File Uploading library
+                $this->upload->initialize($config3);
+                if ($this->upload->do_upload('main_img_desktop')) {
+                    $d = $this->upload->data();
+                    $desk = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                    $desk_name = $d['raw_name'] . $d['file_ext'];
+                }
+                if ($this->upload->do_upload('main_img_mobile')) {
+                    $d = $this->upload->data();
+                    $mob = base_url() . "uploads/banners/" . $d['raw_name'] . $d['file_ext'];
+                    $mob_name = $d['raw_name'] . $d['file_ext'];
+                }
+                $data = array(
+                    'img_alt_desktop' => $this->input->post('img_alt_desktop'),
+                    'img_alt_mobile' => $this->input->post('img_alt_mobile'),
+                    'img_name_desktop' => $desk_name,
+                    'img_name_mobile' => $mob_name,
+                    'img_url_desk' => $desk,
+                    'img_url_mob' => $mob,
+                    'cat' => $this->input->post('cat'),
+                    'location' => $this->input->post('location')
 
-            );
-            $this->load->model('admin_model');
-            $this->admin_model->submit_banner2($data);
-            redirect(base_url() . 'admin/add_banner2');
-        } else {
-            redirect(base_url() . 'admin/add_banners');
+                );
+                $this->load->model('admin_model');
+                $this->admin_model->submit_banner2($data);
+                redirect(base_url() . 'admin/add_banner2');
+            }
         }
     }
     public function add_feature_blog()
