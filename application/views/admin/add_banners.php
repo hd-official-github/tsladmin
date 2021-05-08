@@ -5,7 +5,9 @@
     <div class="card">
         <h4>ADD BANNER SECOND</h4><a href="<?php echo base_url() ?>admin/add_banner2" class="link-2">+ ADD</a>
     </div><br>
-    
+    <div class="card">
+        <h4>ADD BANNER FOR LISITNG PAGE</h4><a href="<?php echo base_url() ?>admin/add_banner_forlist" class="link-2">+ ADD</a>
+    </div><br>
 
     
     

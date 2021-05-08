@@ -107,7 +107,11 @@ class Admin_model extends CI_Model
     function getcat_by_loc($loc)    
     {
          $this->db->where('location',$loc);
-        return $this->db->get('category');
+         return $this->db->get('category');
+    }
+    function submit_bannerforlist($arr)
+    {
+        return $this->db->insert('business_banner_forlist', $arr);
     }
     function get_cat_name_by_id($catid)
     {
