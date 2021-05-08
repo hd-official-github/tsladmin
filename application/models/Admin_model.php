@@ -104,6 +104,11 @@ class Admin_model extends CI_Model
     {
         return $this->db->get('category');
     }
+    function getcat_by_loc($loc)    
+    {
+         $this->db->where('location',$loc);
+        return $this->db->get('category');
+    }
     function get_cat_name_by_id($catid)
     {
         $this->db->where('id', $catid);

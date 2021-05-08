@@ -13,8 +13,15 @@
                 <select name="location" id="loc">
                     <option value="#" default>PLEASE SELECT LOCATION..</option>
                     <?php foreach ($loc_list->result() as $row) {
-                        echo '<option value="' . $row->location_name . '">' . $row->location_name . '</option>';
+                        echo '<option id="loc" value="' . $row->location_name . '">' . $row->location_name . '</option>';
                     } ?>
+                </select>
+            </div>
+            <div class="form-block">
+                <label for="">SELECT CATEGORY</label>
+                
+                <select name="cat" id="cat">
+                    
                 </select>
             </div>
             <div class="form-block">
@@ -90,4 +97,14 @@
         });
 
     });
+    $('#loc').change(function(){
+        $.ajax({
+            url:'<?php echo base_url().'admin/getcat_loc' ?>',
+            method:'post',
+            data:{loc:$('#loc').val()},
+            success:function(result){
+                $('#cat').html(result);
+            }
+        });
+})
 </script>

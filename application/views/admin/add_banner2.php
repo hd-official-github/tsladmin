@@ -15,6 +15,13 @@
                 </select>
             </div>
             <div class="form-block">
+                <label for="">SELECT CATEGORY</label>
+                
+                <select name="cat" id="cat">
+                    
+                </select>
+            </div>
+            <div class="form-block">
                 <label for="">IMAGE FOR DESKTOP</label>
                 <input type="file" placeholder="CHOOSE IMAGES" name="main_img_desktop">
             </div>
@@ -89,4 +96,14 @@
         });
 
     });
+    $('#loc').change(function(){
+        $.ajax({
+            url:'<?php echo base_url().'admin/getcat_loc' ?>',
+            method:'post',
+            data:{loc:$('#loc').val()},
+            success:function(result){
+                $('#cat').html(result);
+            }
+        });
+})
 </script>
