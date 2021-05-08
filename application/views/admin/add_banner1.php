@@ -1,10 +1,13 @@
 <script type="text/javascript" src="<?php echo base_url() ?>assets/js/ckeditor/ckeditor.js"></script>
 <div class="right-d">
-    <?php if(isset($err)){ echo $err; }?>
+    <?php if (isset($err)) {
+        echo $err;
+    } ?>
     <h4 class="heading-2"></h4>
     <div class="blog-list">
+
         <form style="width: 100%;" action="<?php echo base_url() ?>admin/submit_banner1" method="POST" enctype="multipart/form-data">
-           
+            <h4>If category is left empty. The banner will be added to the location page and not on the location->category page</h4>
             <div class="form-block">
                 <label for="">SELECT LOCATION</label>
                 <select name="location" id="loc">
@@ -22,7 +25,7 @@
                 <label for="">IMG ALT FOR DESKTOP (Seperate by ,) Eg. (ALT1,ALT2,ALT3)</label>
                 <input type="text" placeholder="ALT1, ALT2, ALT3" name="img_alt_desktop" required>
             </div>
-                        
+
             <div class="form-block">
                 <label for="">IMAGE FOR MOBILE </label>
                 <input type="file" placeholder="CHOOSE IMAGES" name="main_img_mobile">
