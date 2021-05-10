@@ -328,14 +328,45 @@ class Admin extends CI_Controller
     {
         $this->verify_session();
         if ($this->input->post('submit')) {
-            $arr = array(
-                'location_name' => $this->input->post('location'),
-                'sub_loc_name' => $this->input->post('sub_loc'),
-                'meta_title' => $this->input->post('meta_title'),
-                'meta_desc' => $this->input->post('meta_desc'),
-            );
+            $fs_present = $_FILES['userfile']['size'];
+            if ($fs_present == 0) {
+                //no img change
+                $arr = array(
+                    'location_name' => $this->input->post('location'),
+                    'sub_loc_name' => $this->input->post('sub_loc'),
+                    'meta_title' => $this->input->post('meta_title'),
+                    'meta_desc' => $this->input->post('meta_desc'),
+                    'subloc_img' => $this->input->post('subloc_img'),
+                    'sublocimg_name' => $this->input->post('sublocimg_name'),
+                );
+            } else {
+                //img changed
+                $config3['upload_path'] = './uploads/sublocation';   // Directory 
+                $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
+                $config3['max_size'] = '30720';   //Max Size
+                $this->load->library('upload', $config3);  //File Uploading library
+                $this->upload->initialize($config3);
+                if ($this->upload->do_upload('userfile')) {
+                    $data = $this->upload->data();
+                    $sign = base_url() . "uploads/sublocation/" . $data['raw_name'] . $data['file_ext'];
+                    $arr = array(
+                        'location_name' => $this->input->post('location'),
+                        'sub_loc_name' => $this->input->post('sub_loc'),
+                        'meta_title' => $this->input->post('meta_title'),
+                        'meta_desc' => $this->input->post('meta_desc'),
+                        'subloc_img' => $sign,
+                        'sublocimg_name' => $data['raw_name'] . $data['file_ext']
+                    );
+                } else {
+                    $d['err'] = "ERROR UPLOADING IMAGE";
+                    $this->load->view('admin/header');
+                    $this->load->view('admin/add_sub_location', $d);
+                    $this->load->view('admin/footer');
+                    die;
+                }
+            }
+            unlink('./uploads/sublocation/' . $this->input->post('sublocimg_name'));
             $this->load->model('admin_model');
-
             $this->admin_model->update_sublocation($this->input->post('ide'), $arr);
             redirect(base_url() . 'admin/location');
         } else {
@@ -346,15 +377,32 @@ class Admin extends CI_Controller
     {
         $this->verify_session();
         if ($this->input->post('submit')) {
-            $arr = array(
-                'location_name' => $this->input->post('location'),
-                'sub_loc_name' => $this->input->post('sub_loc'),
-                'meta_title' => $this->input->post('meta_title'),
-                'meta_desc' => $this->input->post('meta_desc'),
-            );
-            $this->load->model('admin_model');
-            $this->admin_model->upload_sub_location($arr);
-            redirect(base_url() . 'admin/location');
+            $config3['upload_path'] = './uploads/sublocation';   // Directory 
+            $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
+            $config3['max_size'] = '30720';   //Max Size
+            // $config3['file_name'] = "blog_" . trim($this->input->post('blog_title'));   // For unique image name at a time
+            $this->load->library('upload', $config3);  //File Uploading library
+            $this->upload->initialize($config3);
+            if ($this->upload->do_upload('userfile')) {
+                $data = $this->upload->data();
+                $sign = base_url() . "uploads/sublocation/" . $data['raw_name'] . $data['file_ext'];
+                $d = array(
+                    'location_name' => $this->input->post('location'),
+                    'sub_loc_name' => $this->input->post('sub_loc'),
+                    'meta_title' => $this->input->post('meta_title'),
+                    'meta_desc' => $this->input->post('meta_desc'),
+                    'subloc_img' => $sign,
+                    'sublocimg_name' => $data['raw_name'] . $data['file_ext']
+                );
+                $this->load->model('admin_model');
+                $this->admin_model->upload_sub_location($d);
+                redirect(base_url() . 'admin/location');
+            } else {
+                $d['err'] = "ERROR UPLOADING IMAGE";
+                $this->load->view('admin/header');
+                $this->load->view('admin/add_sub_location', $d);
+                $this->load->view('admin/footer');
+            }
         } else {
             redirect(base_url() . 'admin/location');
         }
@@ -402,6 +450,8 @@ class Admin extends CI_Controller
         $this->verify_session();
         $id = $this->uri->segment(3);
         $this->load->model('admin_model');
+        $d = $this->admin_model->get_subloc_img_name($id);
+        unlink('./uploads/sublocation/' . $d);
         $this->admin_model->del_sub_loc_by_id($id);
         redirect(base_url() . 'admin/location');
     }
@@ -1093,6 +1143,7 @@ class Admin extends CI_Controller
         $this->verify_session();
         $this->load->model('admin_model');
         $data['loc_list'] = $this->admin_model->get_location();
+        $data['allbanner1'] = $this->admin_model->get_allbanner1();
         // $data['cat'] = $this->admin_model->getcat_by_loc();
         $this->load->view('admin/header');
         $this->load->view('admin/add_banner1', $data);
@@ -1113,6 +1164,7 @@ class Admin extends CI_Controller
         $this->verify_session();
         $this->load->model('admin_model');
         $data['loc_list'] = $this->admin_model->get_location();
+        $data['allbanner2'] = $this->admin_model->get_allbanner2();
         $this->load->view('admin/header');
         $this->load->view('admin/add_banner2', $data);
         $this->load->view('admin/footer');
@@ -1249,20 +1301,18 @@ class Admin extends CI_Controller
             }
         }
     }
-    
+
     public function add_banner_forlist()
     {
         $this->verify_session();
         $this->load->model('admin_model');
         $data['loc_list'] = $this->admin_model->get_location();
         $this->load->view('admin/header');
-        $this->load->view('admin/add_banner_forlist',$data);
+        $this->load->view('admin/add_banner_forlist', $data);
         $this->load->view('admin/footer');
-
-
     }
     public function submit_banner_forlist()
-    { 
+    {
         $this->verify_session();
         if ($this->input->post('submit')) {
             if (empty($this->input->post('cat'))) {
@@ -1325,7 +1375,7 @@ class Admin extends CI_Controller
                 $this->admin_model->submit_bannerforlist($data);
                 redirect(base_url() . 'admin/add_banner_forlist');
             }
-        }  
+        }
     }
     public function add_feature_blog()
     {
@@ -1373,7 +1423,30 @@ class Admin extends CI_Controller
             redirect(base_url() . 'admin/add_feature_blog');
         }
     }
-
+    public function delete_banner1()
+    {
+        $this->verify_session();
+        $id = $this->uri->segment(3);
+        $this->load->model('admin_model');
+        $icon_name = $this->admin_model->get_banner1_pcimage_name($id);
+        $icon_name2 = $this->admin_model->get_banner1_mobimage_name($id);
+        unlink("./uploads/banners/" . $icon_name);
+        unlink("./uploads/banners/" . $icon_name2);
+        $this->admin_model->delete_banner1($id);
+        redirect(base_url() . 'admin/add_banner1');
+    }
+    public function delete_banner2()
+    {
+        $this->verify_session();
+        $id = $this->uri->segment(3);
+        $this->load->model('admin_model');
+        $icon_name = $this->admin_model->get_banner2_pcimage_name($id);
+        $icon_name2 = $this->admin_model->get_banner2_mobimage_name($id);
+        unlink("./uploads/banners/" . $icon_name);
+        unlink("./uploads/banners/" . $icon_name2);
+        $this->admin_model->delete_banner2($id);
+        redirect(base_url() . 'admin/add_banner2');
+    }
     //////////////////////////////////// SESSION END   //////////////////
     public function logout()
     {

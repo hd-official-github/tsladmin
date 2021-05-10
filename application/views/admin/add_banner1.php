@@ -19,9 +19,9 @@
             </div>
             <div class="form-block">
                 <label for="">SELECT CATEGORY</label>
-                
+
                 <select name="cat" id="cat">
-                    
+
                 </select>
             </div>
             <div class="form-block">
@@ -47,6 +47,22 @@
 
         </form>
     </div>
+    <div class="list">
+        <?php foreach ($allbanner1->result() as $row) { ?>
+            <div class="blog-list">
+                <div class="bleft" style="display: flex;align-items:center;">
+                    <img src="<?php echo $row->img_url_desk ?>" alt="" style="width: 40px;height:40px">
+
+                    <p class="paragraph-5" style="padding-left: 20px;"><?php echo $row->location ?></p>
+                    <p class="paragraph-5" style="padding-left: 20px;"><?php echo $row->cat ?></p>
+                </div>
+                <div class="bright">
+                    <a href="<?php echo base_url() ?>admin/delete_banner1/<?php echo $row->id ?>" class="actions w-inline-block"><img src="<?php echo base_url() ?>assets/images/delete.png" loading="lazy" width="32" sizes="(max-width: 479px) 100vw, 32px" alt="" /></a>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+
 </div>
 <script>
     CKEDITOR.replace('textarea_id');
@@ -97,14 +113,16 @@
         });
 
     });
-    $('#loc').change(function(){
+    $('#loc').change(function() {
         $.ajax({
-            url:'<?php echo base_url().'admin/getcat_loc' ?>',
-            method:'post',
-            data:{loc:$('#loc').val()},
-            success:function(result){
+            url: '<?php echo base_url() . 'admin/getcat_loc' ?>',
+            method: 'post',
+            data: {
+                loc: $('#loc').val()
+            },
+            success: function(result) {
                 $('#cat').html(result);
             }
         });
-})
+    })
 </script>

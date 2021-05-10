@@ -5,7 +5,7 @@
     </div>
     <h4 class="heading-2"></h4>
     <div class="blog-list">
-        <form style="width: 100%;" action="<?php echo base_url() ?>admin/update_sub_location" method="POST">
+        <form style="width: 100%;" action="<?php echo base_url() ?>admin/update_sub_location" method="POST" enctype="multipart/form-data">
             <div class="form-block">
                 <label for="">LOCATION NAME</label>
                 <?php foreach ($subloc_data->result() as $data) { ?>
@@ -25,6 +25,13 @@
             <div class="form-block">
                 <label for="">SUB-LOCATION </label>
                 <input type="text" placeholder="Sub-location Name (ex. Indiranagar,Kormangala etc)" name="sub_loc" required value="<?php echo $data->sub_loc_name ?>">
+            </div>
+            <div class="form-block">
+                <label for="">SUBLOCATION IMAGE</label>
+                <input type="file" name="userfile" required>
+                <img src="<?php echo $data->subloc_img; ?>" alt="" width="42">
+                <input type="text" placeholder="IC URL" name="subloc_img" hidden value="<?php echo $data->subloc_img; ?>">
+                <input type="text" placeholder="IC NAME" name="sublocimg_name" hidden value="<?php echo $data->sublocimg_name ?>">
             </div>
             <div class=" form-block">
                 <label for="">META TITLE</label>

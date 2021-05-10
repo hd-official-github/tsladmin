@@ -5,7 +5,7 @@
     </div>
     <h4 class="heading-2"></h4>
     <div class="blog-list">
-        <form style="width: 100%;" action="<?php echo base_url() ?>admin/submit_sub_location" method="POST">
+        <form style="width: 100%;" action="<?php echo base_url() ?>admin/submit_sub_location" method="POST" enctype="multipart/form-data">
             <div class="form-block">
                 <label for="">LOCATION NAME</label>
                 <select name="location" style="padding-left: 10px;padding-right: 30px;">
@@ -23,6 +23,10 @@
             <div class="form-block">
                 <label for="">SUB-LOCATION </label>
                 <input type="text" placeholder="Sub-location Name (ex. Indiranagar,Kormangala etc)" name="sub_loc" required>
+            </div>
+            <div class="form-block">
+                <label for="">SUBLOCATION IMAGE</label>
+                <input type="file" name="userfile" required>
             </div>
             <div class=" form-block">
                 <label for="">META TITLE</label>

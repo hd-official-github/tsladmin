@@ -104,10 +104,10 @@ class Admin_model extends CI_Model
     {
         return $this->db->get('category');
     }
-    function getcat_by_loc($loc)    
+    function getcat_by_loc($loc)
     {
-         $this->db->where('location',$loc);
-         return $this->db->get('category');
+        $this->db->where('location', $loc);
+        return $this->db->get('category');
     }
     function submit_bannerforlist($arr)
     {
@@ -289,5 +289,63 @@ class Admin_model extends CI_Model
     {
         $this->db->where('id', $id);
         $this->db->update('sub_location', $arr);
+    }
+    function get_allbanner1()
+    {
+        return $this->db->get('business_banner1');
+    }
+    function get_banner1_pcimage_name($id)
+    {
+        $this->db->where('id', $id);
+        $q = $this->db->get('business_banner1');
+        foreach ($q->result() as $row) {
+            return $row->img_name_desktop;
+        }
+    }
+    function get_banner1_mobimage_name($id)
+    {
+        $this->db->where('id', $id);
+        $q = $this->db->get('business_banner1');
+        foreach ($q->result() as $row) {
+            return $row->img_name_mobile;
+        }
+    }
+    function delete_banner1($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('business_banner1');
+    }
+    function get_allbanner2()
+    {
+        return $this->db->get('business_banner2');
+    }
+    function get_banner2_pcimage_name($id)
+    {
+        $this->db->where('id', $id);
+        $q = $this->db->get('business_banner2');
+        foreach ($q->result() as $row) {
+            return $row->img_name_desktop;
+        }
+    }
+    function get_banner2_mobimage_name($id)
+    {
+        $this->db->where('id', $id);
+        $q = $this->db->get('business_banner2');
+        foreach ($q->result() as $row) {
+            return $row->img_name_mobile;
+        }
+    }
+    function delete_banner2($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('business_banner2');
+    }
+    function get_subloc_img_name($id)
+    {
+        $this->db->where('id', $id);
+        $q = $this->db->get('sub_location');
+        foreach ($q->result() as $row) {
+            return $row->sublocimg_name;
+        }
     }
 }
