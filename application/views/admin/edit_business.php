@@ -19,9 +19,10 @@
             <div class="form-block">
                 <label for="">SELECT CATEGORY</label>
                 <select name="category" id="">
-                    <option value="<?php echo $category_id ?>" default selected><?php echo $cat_name; ?></option>
+                    
+                    <option value="<?php echo $category_id?>" default selected><?php echo $category_id; ?></option>
                     <?php foreach ($category->result() as $row) {
-                        echo '<option value="' . $row->id . '">' . $row->category_name . '</option>';
+                        echo '<option value="' . $row->category_name . '">' . $row->category_name . '</option>';
                     } ?>
                 </select>
             </div>

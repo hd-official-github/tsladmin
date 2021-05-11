@@ -15,16 +15,17 @@
             </div>
             <div class="form-block">
                 <label for="">SELECT CATEGORY</label>
-                <select name="category" id="">
+                <select name="category" id="cat">
+                <option value='0'>--Select Category--</option>
                     <?php foreach ($category->result() as $row) {
-                        echo '<option value="' . $row->id . '">' . $row->category_name . '</option>';
+                        echo '<option value="' . $row->category_name . '">' . $row->category_name . '</option>';
                     } ?>
                 </select>
             </div>
-            <div class="form-block">
+            <div class="form-block" id="location">
                 <label for="">SELECT LOCATION</label>
                 <select name="location" id="loc">
-                    <option value="#" default>PLEASE SELECT LOCATION..</option>
+                    <option value="#" default>--PLEASE SELECT LOCATION--</option>
                     <?php foreach ($loc_list->result() as $row) {
                         echo '<option value="' . $row->location_name . '">' . $row->location_name . '</option>';
                     } ?>
@@ -32,20 +33,15 @@
             </div>
             <div class="form-block">
                 <label for="">SELECT SUB LOCATION</label>
-                <select name="sub_location" id="sub_loc">
-                    <option value="#" default>PLEASE SELECT SUB LOCATION..</option>
-                    <?php foreach ($sub_loc->result() as $row) {
-                        echo '<option value="' . $row->sub_loc_name . '">' . $row->sub_loc_name . '</option>';
-                    } ?>
+                <select name="sub_location" id='subloc'>
+                    <option value="0">--Select Sublocation--</option>
                 </select>
             </div>
             <div class="form-block">
                 <label for="">SELECT SUBCATEGORY</label>
-                <select name="sub_cat" id="sub_loc">
-                    <option value="#" default>PLEASE SELECT SUB CATEGORY..</option>
-                    <?php foreach ($sub_cat->result() as $row) {
-                        echo '<option value="' . $row->sub_category_name . '">' . $row->sub_category_name . '</option>';
-                    } ?>
+                <select name="sub_cat" id="subcat">
+                    <option value="0" default>--PLEASE SELECT SUB CATEGORY..</option>
+                   
                 </select>
             </div>
             <div class="form-block">
@@ -154,19 +150,32 @@
 <script>
     $(document).ready(function() {
 
-        // $("#loc").change(function() {
-        //     $.ajax({
-        //         url: "<?php echo base_url() ?>admin/get_sub_loc",
-        //         data: {
-        //             location: $('#loc').val()
-        //         },
-        //         method: 'POST',
-        //         success: function(result) {
-        //             $("#subloc").html(result);
-        //         }
-        //     });
-        //     console.log($('#loc').val());
-        // });
+        $("#loc").change(function() {
+            $.ajax({
+                url: "<?php echo base_url() ?>admin/get_sub_loc",
+                data: {
+                    location: $('#loc').val()
+                },
+                method: 'POST',
+                success: function(result) {
+                    $("#subloc").html(result);
+                }
+            });
+            console.log($('#loc').val());
+        });
+        $("#cat").change(function() {
+            $.ajax({
+                url: "<?php echo base_url() ?>admin/get_sub_cat",
+                data: {
+                    cat: $('#cat').val()
+                },
+                method: 'POST',
+                success: function(result) {
+                    $("#subcat").html(result);
+                }
+            });
+            console.log($('#loc').val());
+        });
 
     });
 </script>

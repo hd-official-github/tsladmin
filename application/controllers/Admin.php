@@ -255,11 +255,11 @@ class Admin extends CI_Controller
         $this->load->model('admin_model');
         $data = $this->admin_model->get_sub_location($loc);
 
-        echo '<select name="sub_location">';
+          echo "<option value='0'>--Select Sublocation--</option>";
         foreach ($data->result() as $row) {
             echo '<option value="' . $row->sub_loc_name . '" >' . $row->sub_loc_name . '</option>';
         }
-        echo '</select>';
+       
     }
     public function edit_location()
     {
@@ -679,6 +679,16 @@ class Admin extends CI_Controller
             // }
         }
     }
+    public function get_sub_cat()
+    {
+        $this->load->model('admin_model');
+       
+        $res = $this->admin_model->get_sub_category($this->input->post('cat'));
+       echo " <option value='0' default>--PLEASE SELECT SUB CATEGORY..</option>";
+        foreach($res->result() as $row){
+            echo '<option value="'.$row->sub_category_name.'">'.$row->sub_category_name.'</option>';
+        }
+    }
     public function edit_subcategory()
     {
         $this->verify_session();
@@ -817,6 +827,8 @@ class Admin extends CI_Controller
         }
         $data['loc_list'] = $this->admin_model->get_location();
         $data['cat_name'] = $this->admin_model->get_cat_name_by_id($data['category_id']);
+        
+
         $this->load->view('admin/edit_business', $data);
         $this->load->view('admin/footer');
     }
