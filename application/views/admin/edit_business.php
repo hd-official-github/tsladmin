@@ -35,11 +35,20 @@
                 </select>
             </div>
             <div class="form-block">
+                <label for="">SELECT SUBCATEGORY</label>
+                <select name="sub_cat" id="">
+                    <option value="<?php echo $sub_cat ?>" default selected><?php echo $sub_cat; ?></option>
+                    <?php foreach ($sub_category->result() as $row) {
+                        echo '<option value="' . $row->sub_category_name . '">' . $row->sub_category_name . '</option>';
+                    } ?>
+                </select>
+            </div>
+            <div class="form-block">
                 <label for="">SELECT SUB LOCATION</label>
             </div>
             <div class="form-block">
 
-                <div id="subloc">
+                <div id="">
                     <select name="sub_location" id="">
                         <option value="<?php echo $sub_location; ?>" default><?php echo $sub_location; ?></option>
                     </select>
@@ -77,6 +86,15 @@
             <div class="form-block">
                 <label for="">WEBSITE</label>
                 <input type="text" placeholder="BUSINESS WEBSITE" name="business_website" value="<?php echo $website; ?>">
+            </div>
+
+            <div class="form-block">
+                <label for="">MOBILE NUMBER</label>
+                <input type="number" placeholder="MOBILE NUMBER" name="mobno" value="<?php echo $mobno; ?>">
+            </div>
+            <div class="form-block">
+                <label for="">EMAIL</label>
+                <input type="email" placeholder="BUSINESS EMAIL" name="email" value="<?php echo $email; ?>">
             </div>
             <div class="form-block">
                 <label for="">FACEBOOK PAGE LINK</label>

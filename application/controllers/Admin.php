@@ -502,16 +502,7 @@ class Admin extends CI_Controller
         $this->load->view('admin/edit_category', $arr);
         $this->load->view('admin/footer');
     }
-    public function add_sub_category()
-    {
-        $this->verify_session();
-        $this->load->view('admin/header');
-        $this->load->model('admin_model');
-        $data['category'] = $this->admin_model->get_category();
-        $data['location'] = $this->admin_model->get_location();
-        $this->load->view('admin/add_sub_category', $data);
-        $this->load->view('admin/footer');
-    }
+   
     public function submit_category()
     {
         $this->verify_session();
@@ -597,7 +588,28 @@ class Admin extends CI_Controller
             redirect(base_url() . 'admin/category');
         }
     }
-
+   
+    public function delete_category()
+    {
+        $this->verify_session();
+        $cat_name = $this->input->post('category');
+        $this->load->model('admin_model');
+        $icon_name = $this->admin_model->get_cat_image_name($cat_name);
+        unlink("./uploads/category/" . $icon_name);
+        $this->admin_model->delete_cat($cat_name);
+    }
+    
+    ///////////////////////////// SUB-CATEGORY////////////////////////
+    public function add_sub_category()
+    {
+        $this->verify_session();
+        $this->load->view('admin/header');
+        $this->load->model('admin_model');
+        $data['category'] = $this->admin_model->get_category();
+        $data['location'] = $this->admin_model->get_location();
+        $this->load->view('admin/add_sub_category', $data);
+        $this->load->view('admin/footer');
+    }
     public function submit_sub_category()
     {
         $this->verify_session();
@@ -654,7 +666,7 @@ class Admin extends CI_Controller
                 echo ('<div class="card-content">
                     ' . $row->sub_category_name . '
                     <div class="options">
-                        <a href="#" class="actions w-inline-block"><img src="' . base_url()
+                        <a href="' . base_url() . 'admin/edit_subcategory/' . $row->id . '" class="actions w-inline-block"><img src="' . base_url()
                     . 'assets/images/edit.png" loading="lazy" width="33" alt="" /></a>
                         <a href="' . base_url() . 'admin/delete_subcategory/' . $row->id . '" class="actions w-inline-block"><img src="' . base_url()
                     . 'assets/images/delete.png" loading="lazy" width="33" alt="" /></a>
@@ -667,14 +679,71 @@ class Admin extends CI_Controller
             // }
         }
     }
-    public function delete_category()
+    public function edit_subcategory()
     {
         $this->verify_session();
-        $cat_name = $this->input->post('category');
         $this->load->model('admin_model');
-        $icon_name = $this->admin_model->get_cat_image_name($cat_name);
-        unlink("./uploads/category/" . $icon_name);
-        $this->admin_model->delete_cat($cat_name);
+        $data['res'] = $this->admin_model->get_subcat_by_id($this->uri->segment(3));
+        $data['category'] = $this->admin_model->get_category();
+        $data['location'] = $this->admin_model->get_location();
+        $this->load->view('admin/header');
+        $this->load->view('admin/edit_subcategory',$data);
+        $this->load->view('admin/footer');
+    }
+    public function update_sub_category()
+    {
+        $this->verify_session();
+   
+        $this->load->model('admin_model');
+        if ($this->input->post('submit')) {
+            $fs_present = $_FILES['userfile']['size']; // file size > 0 if file is present
+            if ($fs_present == 0) {
+                // no img change
+                
+                $arr = array(
+                    'slug' => $this->input->post('slug'),
+                    'meta_title' => $this->input->post('meta_title'),
+                    'meta_desc' => $this->input->post('meta_desc'),
+                    'category_name' => $this->input->post('category'),
+                    'icon_name' => $this->input->post('icon_name'),
+                    'location' => $this->input->post('location_name'),
+                    'sub_category_name' => $this->input->post('subcat'),
+                    'icon' => $this->input->post('icon'),
+                    'icon_alt' => $this->input->post('icon_alt'),
+                    'footer_content' => $this->input->post('footer_subcategory_content'),
+                );
+                // print_r($arr); die;
+                $this->admin_model->update_subcategory($this->input->post('id'), $arr);
+                redirect(base_url() . 'admin/dashboard');
+            } else {
+                $config3['upload_path'] = './uploads/subcategory';   // Directory 
+                $config3['allowed_types'] = 'jpg|png|jpeg'; //type of images allowed
+                $config3['max_size'] = '30720';   //Max Size
+                $this->load->library('upload', $config3);  //File Uploading library
+                $this->upload->initialize($config3);
+                if ($this->upload->do_upload('userfile')) {
+                    unlink('./uploads/subcategory/' . $this->input->post('icon_name'));
+                    $data = $this->upload->data();
+                    $sign = base_url() . "uploads/subcategory/" . $data['raw_name'] . $data['file_ext'];
+                    $d = array(
+                        'slug' => $this->input->post('slug'),
+                        'sub_category_name' => $this->input->post('subcat'),
+                        'meta_title' => $this->input->post('meta_title'),
+                        'location' => $this->input->post('location_name'),
+                        'category_name' => $this->input->post('category'),
+                        'meta_desc' => $this->input->post('meta_desc'),
+                        'icon' => $sign,
+                        'icon_name' => $data['raw_name'] . $data['file_ext'],
+                        'icon_alt' => $this->input->post('icon_alt'),
+                        'footer_content' => $this->input->post('footer_subcategory_content'),
+                    );
+                    $this->admin_model->update_subcategory($this->input->post('id'), $d);
+                }
+                redirect(base_url() . 'admin/category');
+            }
+        } else {
+            redirect(base_url() . 'admin/category');
+        }
     }
     public function delete_subcategory()
     {
@@ -704,6 +773,8 @@ class Admin extends CI_Controller
         $data['category'] = $this->admin_model->get_category();
         $data['loc_list'] = $this->admin_model->get_location();
         $data['sub_loc'] = $this->admin_model->get_subloc();
+        $data['sub_cat'] = $this->admin_model->get_all_sub_category();
+
 
         $this->load->view('admin/add_business', $data);
         $this->load->view('admin/footer');
@@ -714,6 +785,7 @@ class Admin extends CI_Controller
         $this->load->view('admin/header');
         $this->load->model('admin_model');
         $data['category'] = $this->admin_model->get_category();
+        $data['sub_category'] = $this->admin_model->get_all_sub_category();
         $d = $this->admin_model->get_business_byid($this->uri->segment(3));
         foreach ($d->result() as $row) {
             $data['business_id'] = $row->business_id;
@@ -728,8 +800,12 @@ class Admin extends CI_Controller
             $data['main_img_alt'] = $row->main_img_alt;
             $data['features'] = $row->features;
             $data['address'] = $row->address;
+            $data['sub_cat'] = $row->sub_category;
+
             $data['map_loc'] = $row->map_loc;
             $data['website'] = $row->website;
+            $data['mobno'] = $row->mobno;
+            $data['email'] = $row->email;
             $data['facebook'] = $row->facebook;
             $data['instagram'] = $row->instagram;
             $data['twitter'] = $row->twitter;
@@ -777,6 +853,7 @@ class Admin extends CI_Controller
                     'about' => $this->input->post('about_business'),
                     'mobno' => $this->input->post('mobno'),
                     'email' => $this->input->post('email'),
+                    'sub_category' => $this->input->post('sub_cat'),
 
                     'main_image' => $sign,
                     'main_img_name' => $d['raw_name'] . $d['file_ext'],
@@ -825,6 +902,9 @@ class Admin extends CI_Controller
                     'address' => $this->input->post('business_address'),
                     'map_loc' => $this->input->post('business_map_loc'),
                     'website' => $this->input->post('business_website'),
+                    'mobno' => $this->input->post('mobno'),
+                    'email' => $this->input->post('email'),
+                    'sub_category' => $this->input->post('sub_cat'),
                     'facebook' => $this->input->post('facebook_link'),
                     'instagram' => $this->input->post('twitter_link'),
                     'twitter' => $this->input->post('instagram_link'),
@@ -855,7 +935,9 @@ class Admin extends CI_Controller
                         'business_name' => $this->input->post('business_name'),
                         'category_id' => $this->input->post('category'),
                         'about' => $this->input->post('about_business'),
-
+                        'mobno' => $this->input->post('mobno'),
+                        'email' => $this->input->post('email'),
+                        'sub_category' => $this->input->post('sub_cat'),
                         'main_image' => $sign,
                         'main_img_name' => $d['raw_name'] . $d['file_ext'],
                         'main_img_alt' => $this->input->post('main_img_alt'),
@@ -923,6 +1005,7 @@ class Admin extends CI_Controller
         $this->admin_model->delete_business($business_id);
         redirect(base_url() . 'admin/list');
     }
+    /////////////////////////Business Image////////////////////
     public function add_business_image()
     {
         $this->verify_session();
@@ -987,6 +1070,32 @@ class Admin extends CI_Controller
             }
             redirect(base_url() . 'admin/list');
         }
+    }
+    public function get_business_img()
+    {
+        $this->load->model('admin_model');
+        $res = $this->admin_model->get_b_img($this->input->post('b_id'));
+        foreach ($res->result() as $row) {
+            echo ('<div class="card-content"><img height=50 width=50 src="'.$row->image_url.'">
+                
+                <div class="options">
+                    
+                    <a href="' . base_url()
+                . 'admin/del_b_img/' . $row->id . '" class="actions w-inline-block"><img src="' . base_url()
+                . 'assets/images/delete.png" loading="lazy" width="33" alt="" /></a>
+                </div>
+            </div>');
+        }
+    }
+    public function del_b_img()
+    {
+        $this->load->model('admin_model');
+        $id = $this->uri->segment(3);
+        $res = $this->admin_model->delete_record('business_images',$id);
+        if($res){
+            redirect(base_url().'admin/add_business_image');
+        }
+
     }
 
     public function add_faq()
@@ -1301,7 +1410,28 @@ class Admin extends CI_Controller
             }
         }
     }
+   public function get_banners_bycnloc()
+   {
+       $this->load->model('admin_model');
+     
+       $res = $this->admin_model->get_banner_bycloc($this->input->post('loc'),$this->input->post('table'),$this->input->post('cat'));
+     
+       foreach($res->result() as $row){
+           echo '<div class="blog-list">
+           <div class="bleft" style="display: flex;align-items:center;">
+               <img src="'.$row->img_url_desk.'" alt="" style="width: 40px;height:40px">
 
+               <p class="paragraph-5" style="padding-left: 20px;">'.$row->location.'</p>
+               <p class="paragraph-5" style="padding-left: 20px;">'.$row->cat.'</p>
+           </div>
+           <div class="bright">
+               
+               <a href="'.base_url().'admin/del_'.$this->input->post('table').'/'.$row->id.'" class="actions w-inline-block"><img src="'.base_url().'assets/images/delete.png" loading="lazy" width="32" sizes="(max-width: 479px) 100vw, 32px" alt="" /></a>
+           </div>
+          </div>';
+       }
+       
+   }
     public function add_banner_forlist()
     {
         $this->verify_session();
@@ -1423,7 +1553,7 @@ class Admin extends CI_Controller
             redirect(base_url() . 'admin/add_feature_blog');
         }
     }
-    public function delete_banner1()
+    public function del_business_banner1()
     {
         $this->verify_session();
         $id = $this->uri->segment(3);
@@ -1435,7 +1565,7 @@ class Admin extends CI_Controller
         $this->admin_model->delete_banner1($id);
         redirect(base_url() . 'admin/add_banner1');
     }
-    public function delete_banner2()
+    public function del_business_banner2()
     {
         $this->verify_session();
         $id = $this->uri->segment(3);
@@ -1446,6 +1576,19 @@ class Admin extends CI_Controller
         unlink("./uploads/banners/" . $icon_name2);
         $this->admin_model->delete_banner2($id);
         redirect(base_url() . 'admin/add_banner2');
+    }
+    public function del_business_banner_forlist()
+    {
+        $this->verify_session();
+        $id = $this->uri->segment(3);
+      
+        $this->load->model('admin_model');
+        $icon_name = $this->admin_model->get_bannerforlist_pcimage_name($id);
+        $icon_name2 = $this->admin_model->get_bannerforlist_mobimage_name($id);
+        unlink("./uploads/banners/" . $icon_name);
+        unlink("./uploads/banners/" . $icon_name2);
+        $this->admin_model->delete_banner_forlist($id);
+        redirect(base_url() . 'admin/add_banner_forlist');
     }
     //////////////////////////////////// SESSION END   //////////////////
     public function logout()

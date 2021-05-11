@@ -143,6 +143,10 @@ class Admin_model extends CI_Model
             return $row->icon_name;
         }
     }
+    function get_all_sub_category()
+    {
+        return $this->db->get('subcategory');
+    }
     function get_subcat_image_name($id)
     {
         $this->db->where('id', $id);
@@ -315,6 +319,11 @@ class Admin_model extends CI_Model
         $this->db->where('id', $id);
         $this->db->delete('business_banner1');
     }
+    function delete_banner_forlist($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('business_banner_forlist');
+    }
     function get_allbanner2()
     {
         return $this->db->get('business_banner2');
@@ -323,6 +332,22 @@ class Admin_model extends CI_Model
     {
         $this->db->where('id', $id);
         $q = $this->db->get('business_banner2');
+        foreach ($q->result() as $row) {
+            return $row->img_name_desktop;
+        }
+    }
+    function get_bannerforlist_mobimage_name($id)
+    {
+        $this->db->where('id', $id);
+        $q = $this->db->get('business_banner_forlist');
+        foreach ($q->result() as $row) {
+            return $row->img_name_mobile;
+        }
+    }
+    function get_bannerforlist_pcimage_name($id)
+    {
+        $this->db->where('id', $id);
+        $q = $this->db->get('business_banner_forlist');
         foreach ($q->result() as $row) {
             return $row->img_name_desktop;
         }
@@ -347,5 +372,30 @@ class Admin_model extends CI_Model
         foreach ($q->result() as $row) {
             return $row->sublocimg_name;
         }
+    }
+    function get_subcat_by_id($id)
+    {
+        $this->db->where('id',$id);
+        return $this->db->get('subcategory');
+    }
+    function update_subcategory($id,$arr)
+    {
+        $this->db->where('id',$id);
+        $this->db->update('subcategory',$arr);
+    }
+    function get_b_img($b_id)
+    {
+        $this->db->where('business_id',$b_id);
+        return $this->db->get('business_images');
+    }
+    function delete_record($table,$id)
+    {
+        $this->db->where('id',$id);
+        return $this->db->delete($table);
+    }
+    function get_banner_bycloc($loc,$table,$cat='')   
+    {
+        $this->db->where(array('location'=>$loc,'cat'=>$cat));
+        return $this->db->get($table);
     }
 }

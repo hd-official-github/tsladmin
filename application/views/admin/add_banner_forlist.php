@@ -47,6 +47,9 @@
 
         </form>
     </div>
+    <div id="list">
+       
+       </div>
 </div>
 <script>
     CKEDITOR.replace('textarea_id');
@@ -107,4 +110,37 @@
             }
         });
 })
+
+$('#cat').change(function(){ 
+       var loc = $('#loc').val();
+       var cat = $('#cat').val();
+       $.ajax({
+            url: '<?php echo base_url() . 'admin/get_banners_bycnloc' ?>',
+            method: 'post',
+            data: {
+                loc: loc,cat:cat,table:"business_banner_forlist"
+            },
+            success: function(result) {
+             
+                $('#list').html(result);
+            }
+        });
+    
+    });
+    $('#loc').change(function(){ 
+       var loc = $('#loc').val();
+      // var cat = $('#cat').val();
+       $.ajax({
+            url: '<?php echo base_url() . 'admin/get_banners_bycnloc' ?>',
+            method: 'post',
+            data: {
+                loc: loc,table:"business_banner_forlist"
+            },
+            success: function(result) {
+             
+                $('#list').html(result);
+            }
+        });
+    
+    });
 </script>

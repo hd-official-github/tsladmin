@@ -47,28 +47,16 @@
 
         </form>
     </div>
-    <div class="list">
-        <?php foreach ($allbanner1->result() as $row) { ?>
-            <div class="blog-list">
-                <div class="bleft" style="display: flex;align-items:center;">
-                    <img src="<?php echo $row->img_url_desk ?>" alt="" style="width: 40px;height:40px">
-
-                    <p class="paragraph-5" style="padding-left: 20px;"><?php echo $row->location ?></p>
-                    <p class="paragraph-5" style="padding-left: 20px;"><?php echo $row->cat ?></p>
-                </div>
-                <div class="bright">
-                    <a href="<?php echo base_url() ?>admin/delete_banner1/<?php echo $row->id ?>" class="actions w-inline-block"><img src="<?php echo base_url() ?>assets/images/delete.png" loading="lazy" width="32" sizes="(max-width: 479px) 100vw, 32px" alt="" /></a>
-                </div>
-            </div>
-        <?php } ?>
+    <div id="list">
+       
     </div>
 
 </div>
-<script>
+<!-- <script>
     CKEDITOR.replace('textarea_id');
     CKEDITOR.replace('textarea_id2');
     CKEDITOR.replace('textarea_id3');
-</script>
+</script> -->
 <style>
     .form-block {
         padding: 10px;
@@ -109,10 +97,11 @@
                     $("#subloc").html(result);
                 }
             });
-            console.log($('#loc').val());
+            
         });
-
+       
     });
+
     $('#loc').change(function() {
         $.ajax({
             url: '<?php echo base_url() . 'admin/getcat_loc' ?>',
@@ -125,4 +114,38 @@
             }
         });
     })
+    $('#cat').change(function(){ 
+       var loc = $('#loc').val();
+       var cat = $('#cat').val();
+      
+       $.ajax({
+            url: '<?php echo base_url() . 'admin/get_banners_bycnloc' ?>',
+            method: 'post',
+            data: {
+                loc: loc,cat:cat,table:'business_banner1'
+            },
+            success: function(result) {
+             
+                $('#list').html(result);
+            }
+        });
+    
+    });
+    $('#loc').change(function(){ 
+       var loc = $('#loc').val();
+      // var cat = $('#cat').val();
+      
+       $.ajax({
+            url: '<?php echo base_url() . 'admin/get_banners_bycnloc' ?>',
+            method: 'post',
+            data: {
+                loc: loc,table:'business_banner1'
+            },
+            success: function(result) {
+             
+                $('#list').html(result);
+            }
+        });
+    
+    });
 </script>

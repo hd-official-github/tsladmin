@@ -40,7 +40,13 @@
                 </select>
             </div>
             <div class="form-block">
-                <div id="subloc"></div>
+                <label for="">SELECT SUBCATEGORY</label>
+                <select name="sub_cat" id="sub_loc">
+                    <option value="#" default>PLEASE SELECT SUB CATEGORY..</option>
+                    <?php foreach ($sub_cat->result() as $row) {
+                        echo '<option value="' . $row->sub_category_name . '">' . $row->sub_category_name . '</option>';
+                    } ?>
+                </select>
             </div>
             <div class="form-block">
                 <label for="">BUSINESS NAME</label>
@@ -148,19 +154,19 @@
 <script>
     $(document).ready(function() {
 
-        $("#loc").change(function() {
-            $.ajax({
-                url: "<?php echo base_url() ?>admin/get_sub_loc",
-                data: {
-                    location: $('#loc').val()
-                },
-                method: 'POST',
-                success: function(result) {
-                    $("#subloc").html(result);
-                }
-            });
-            console.log($('#loc').val());
-        });
+        // $("#loc").change(function() {
+        //     $.ajax({
+        //         url: "<?php echo base_url() ?>admin/get_sub_loc",
+        //         data: {
+        //             location: $('#loc').val()
+        //         },
+        //         method: 'POST',
+        //         success: function(result) {
+        //             $("#subloc").html(result);
+        //         }
+        //     });
+        //     console.log($('#loc').val());
+        // });
 
     });
 </script>
