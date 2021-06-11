@@ -255,11 +255,10 @@ class Admin extends CI_Controller
         $this->load->model('admin_model');
         $data = $this->admin_model->get_sub_location($loc);
 
-          echo "<option value='0'>--Select Sublocation--</option>";
+        echo "<option value='0'>--Select Sublocation--</option>";
         foreach ($data->result() as $row) {
             echo '<option value="' . $row->sub_loc_name . '" >' . $row->sub_loc_name . '</option>';
         }
-       
     }
     public function edit_location()
     {
@@ -502,7 +501,7 @@ class Admin extends CI_Controller
         $this->load->view('admin/edit_category', $arr);
         $this->load->view('admin/footer');
     }
-   
+
     public function submit_category()
     {
         $this->verify_session();
@@ -588,7 +587,7 @@ class Admin extends CI_Controller
             redirect(base_url() . 'admin/category');
         }
     }
-   
+
     public function delete_category()
     {
         $this->verify_session();
@@ -598,7 +597,7 @@ class Admin extends CI_Controller
         unlink("./uploads/category/" . $icon_name);
         $this->admin_model->delete_cat($cat_name);
     }
-    
+
     ///////////////////////////// SUB-CATEGORY////////////////////////
     public function add_sub_category()
     {
@@ -682,11 +681,11 @@ class Admin extends CI_Controller
     public function get_sub_cat()
     {
         $this->load->model('admin_model');
-       
+
         $res = $this->admin_model->get_sub_category($this->input->post('cat'));
-       echo " <option value='0' default>--PLEASE SELECT SUB CATEGORY..</option>";
-        foreach($res->result() as $row){
-            echo '<option value="'.$row->sub_category_name.'">'.$row->sub_category_name.'</option>';
+        echo " <option value='0' default>--PLEASE SELECT SUB CATEGORY..</option>";
+        foreach ($res->result() as $row) {
+            echo '<option value="' . $row->sub_category_name . '">' . $row->sub_category_name . '</option>';
         }
     }
     public function edit_subcategory()
@@ -697,19 +696,19 @@ class Admin extends CI_Controller
         $data['category'] = $this->admin_model->get_category();
         $data['location'] = $this->admin_model->get_location();
         $this->load->view('admin/header');
-        $this->load->view('admin/edit_subcategory',$data);
+        $this->load->view('admin/edit_subcategory', $data);
         $this->load->view('admin/footer');
     }
     public function update_sub_category()
     {
         $this->verify_session();
-   
+
         $this->load->model('admin_model');
         if ($this->input->post('submit')) {
             $fs_present = $_FILES['userfile']['size']; // file size > 0 if file is present
             if ($fs_present == 0) {
                 // no img change
-                
+
                 $arr = array(
                     'slug' => $this->input->post('slug'),
                     'meta_title' => $this->input->post('meta_title'),
@@ -827,7 +826,7 @@ class Admin extends CI_Controller
         }
         $data['loc_list'] = $this->admin_model->get_location();
         $data['cat_name'] = $this->admin_model->get_cat_name_by_id($data['category_id']);
-        
+
 
         $this->load->view('admin/edit_business', $data);
         $this->load->view('admin/footer');
@@ -1088,7 +1087,7 @@ class Admin extends CI_Controller
         $this->load->model('admin_model');
         $res = $this->admin_model->get_b_img($this->input->post('b_id'));
         foreach ($res->result() as $row) {
-            echo ('<div class="card-content"><img height=50 width=50 src="'.$row->image_url.'">
+            echo ('<div class="card-content"><img height=50 width=50 src="' . $row->image_url . '">
                 
                 <div class="options">
                     
@@ -1103,11 +1102,10 @@ class Admin extends CI_Controller
     {
         $this->load->model('admin_model');
         $id = $this->uri->segment(3);
-        $res = $this->admin_model->delete_record('business_images',$id);
-        if($res){
-            redirect(base_url().'admin/add_business_image');
+        $res = $this->admin_model->delete_record('business_images', $id);
+        if ($res) {
+            redirect(base_url() . 'admin/add_business_image');
         }
-
     }
 
     public function add_faq()
@@ -1422,28 +1420,27 @@ class Admin extends CI_Controller
             }
         }
     }
-   public function get_banners_bycnloc()
-   {
-       $this->load->model('admin_model');
-     
-       $res = $this->admin_model->get_banner_bycloc($this->input->post('loc'),$this->input->post('table'),$this->input->post('cat'));
-     
-       foreach($res->result() as $row){
-           echo '<div class="blog-list">
-           <div class="bleft" style="display: flex;align-items:center;">
-               <img src="'.$row->img_url_desk.'" alt="" style="width: 40px;height:40px">
+    public function get_banners_bycnloc()
+    {
+        $this->load->model('admin_model');
 
-               <p class="paragraph-5" style="padding-left: 20px;">'.$row->location.'</p>
-               <p class="paragraph-5" style="padding-left: 20px;">'.$row->cat.'</p>
+        $res = $this->admin_model->get_banner_bycloc($this->input->post('loc'), $this->input->post('table'), $this->input->post('cat'));
+
+        foreach ($res->result() as $row) {
+            echo '<div class="blog-list">
+           <div class="bleft" style="display: flex;align-items:center;">
+               <img src="' . $row->img_url_desk . '" alt="" style="width: 40px;height:40px">
+
+               <p class="paragraph-5" style="padding-left: 20px;">' . $row->location . '</p>
+               <p class="paragraph-5" style="padding-left: 20px;">' . $row->cat . '</p>
            </div>
            <div class="bright">
                
-               <a href="'.base_url().'admin/del_'.$this->input->post('table').'/'.$row->id.'" class="actions w-inline-block"><img src="'.base_url().'assets/images/delete.png" loading="lazy" width="32" sizes="(max-width: 479px) 100vw, 32px" alt="" /></a>
+               <a href="' . base_url() . 'admin/del_' . $this->input->post('table') . '/' . $row->id . '" class="actions w-inline-block"><img src="' . base_url() . 'assets/images/delete.png" loading="lazy" width="32" sizes="(max-width: 479px) 100vw, 32px" alt="" /></a>
            </div>
           </div>';
-       }
-       
-   }
+        }
+    }
     public function add_banner_forlist()
     {
         $this->verify_session();
@@ -1593,7 +1590,7 @@ class Admin extends CI_Controller
     {
         $this->verify_session();
         $id = $this->uri->segment(3);
-      
+
         $this->load->model('admin_model');
         $icon_name = $this->admin_model->get_bannerforlist_pcimage_name($id);
         $icon_name2 = $this->admin_model->get_bannerforlist_mobimage_name($id);
@@ -1601,6 +1598,15 @@ class Admin extends CI_Controller
         unlink("./uploads/banners/" . $icon_name2);
         $this->admin_model->delete_banner_forlist($id);
         redirect(base_url() . 'admin/add_banner_forlist');
+    }
+    public function approve()
+    {
+        $this->verify_session();
+        $this->load->model('admin_model');
+        $data['approval'] = $this->admin_model->get_approval_list();
+        $this->load->view('admin/header');
+        $this->load->view('admin/approval', $data);
+        $this->load->view('admin/footer');
     }
     //////////////////////////////////// SESSION END   //////////////////
     public function logout()

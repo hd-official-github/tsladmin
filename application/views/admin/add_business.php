@@ -16,7 +16,7 @@
             <div class="form-block">
                 <label for="">SELECT CATEGORY</label>
                 <select name="category" id="cat">
-                <option value='0'>--Select Category--</option>
+                    <option value='0'>--Select Category--</option>
                     <?php foreach ($category->result() as $row) {
                         echo '<option value="' . $row->category_name . '">' . $row->category_name . '</option>';
                     } ?>
@@ -41,7 +41,7 @@
                 <label for="">SELECT SUBCATEGORY</label>
                 <select name="sub_cat" id="subcat">
                     <option value="0" default>--PLEASE SELECT SUB CATEGORY..</option>
-                   
+
                 </select>
             </div>
             <div class="form-block">
@@ -145,8 +145,7 @@
         border: none;
     }
 </style>
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
 

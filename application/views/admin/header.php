@@ -31,6 +31,10 @@
                 <img src="<?php echo base_url() ?>assets/images/dash.png" loading="lazy" width="66" sizes="(max-width: 479px) 14vw, 66px" alt="" />
                 <p class="paragraph-4">DASHBOARD</p>
             </a>
+            <a href="<?php echo base_url() ?>admin/approve" class="nav-block w-inline-block">
+                <img src="<?php echo base_url() ?>assets/images/dash.png" loading="lazy" width="66" sizes="(max-width: 479px) 14vw, 66px" alt="" />
+                <p class="paragraph-4">APPROVE LISTING</p>
+            </a>
             <a style="margin-left:15px" href="<?php echo base_url() ?>admin/blogs" class="nav-block w-inline-block"><img src="<?php echo base_url() ?>assets/images/blog.png" loading="lazy" width="36" sizes="(max-width: 479px) 14vw, 66px" alt="" />
                 <p class="paragraph-4" style="padding-left: 10px;">BLOGS</p>
             </a><a href="<?php echo base_url() ?>admin/location" class="nav-block w-inline-block"><img src="<?php echo base_url() ?>assets/images/dash.png" loading="lazy" width="66" sizes="(max-width: 479px) 14vw, 66px" alt="" />
@@ -47,5 +51,4 @@
             <a href="<?php echo base_url() ?>admin/add_banners" class="nav-block w-inline-block"><img src="<?php echo base_url() ?>assets/images/dash.png" loading="lazy" width="66" sizes="(max-width: 479px) 14vw, 66px" alt="" />
                 <p class="paragraph-4">ADD BANNERS</p>
             </a>
-            
         </div>

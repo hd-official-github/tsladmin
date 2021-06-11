@@ -375,27 +375,32 @@ class Admin_model extends CI_Model
     }
     function get_subcat_by_id($id)
     {
-        $this->db->where('id',$id);
+        $this->db->where('id', $id);
         return $this->db->get('subcategory');
     }
-    function update_subcategory($id,$arr)
+    function update_subcategory($id, $arr)
     {
-        $this->db->where('id',$id);
-        $this->db->update('subcategory',$arr);
+        $this->db->where('id', $id);
+        $this->db->update('subcategory', $arr);
     }
     function get_b_img($b_id)
     {
-        $this->db->where('business_id',$b_id);
+        $this->db->where('business_id', $b_id);
         return $this->db->get('business_images');
     }
-    function delete_record($table,$id)
+    function delete_record($table, $id)
     {
-        $this->db->where('id',$id);
+        $this->db->where('id', $id);
         return $this->db->delete($table);
     }
-    function get_banner_bycloc($loc,$table,$cat='')   
+    function get_banner_bycloc($loc, $table, $cat = '')
     {
-        $this->db->where(array('location'=>$loc,'cat'=>$cat));
+        $this->db->where(array('location' => $loc, 'cat' => $cat));
         return $this->db->get($table);
+    }
+    function get_approval_list()
+    {
+        $this->db->where(array('is_verified' => false, 'is_data_submitted' => true));
+        return $this->db->get('pre_business_list');
     }
 }
