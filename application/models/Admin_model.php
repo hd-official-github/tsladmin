@@ -403,4 +403,48 @@ class Admin_model extends CI_Model
         $this->db->where(array('is_verified' => false, 'is_data_submitted' => true));
         return $this->db->get('pre_business_list');
     }
+    function verify_bid($bid)
+    {
+        $this->db->where('business_id', $bid);
+        $q = $this->db->get('pre_business_list');
+
+        return $q->num_rows() > 0;
+    }
+    function get_bid_details($bid)
+    {
+        $this->db->where('business_id', $bid);
+        return $this->db->get('pre_business_list');
+    }
+    function get_bid_images($bid)
+    {
+        $this->db->where('business_id', $bid);
+        return $this->db->get('business_images');
+    }
+    function ins_b_img_alt($image_name, $alt)
+    {
+        $arr = array(
+            'img_alt' => $alt,
+        );
+        $this->db->where('image_name', $image_name);
+        return $this->db->update('business_images', $arr);
+    }
+    function insert_business($ar, $bid)
+    {
+        $this->db->where('business_id', $bid);
+        $q = $this->db->get('business_list');
+        if ($q->num_rows() > 0) {
+            $this->db->where('business_id', $bid);
+            $this->db->update('business_list', $ar);
+        } else {
+            $this->db->insert('business_list', $ar);
+        }
+    }
+    function update_verified($bid)
+    {
+        $this->db->where('business_id', $bid);
+        $ar = array(
+            'is_verified' => true,
+        );
+        $this->db->update('pre_business_list', $ar);
+    }
 }

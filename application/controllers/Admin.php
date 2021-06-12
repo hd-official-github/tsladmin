@@ -1608,6 +1608,83 @@ class Admin extends CI_Controller
         $this->load->view('admin/approval', $data);
         $this->load->view('admin/footer');
     }
+    public function verify_approval()
+    {
+        $this->verify_session();
+        $bid = $this->uri->segment(3);
+        if ($bid) {
+            $this->load->model('admin_model');
+
+            $ver_bid = $this->admin_model->verify_bid($bid);
+            if ($ver_bid) {
+                $data['location'] = $this->admin_model->get_location();
+                $data['category'] = $this->admin_model->get_category();
+                $data['bid_details'] = $this->admin_model->get_bid_details($bid);
+                $data['bid_images'] = $this->admin_model->get_bid_images($bid);
+                $this->load->view('admin/header');
+                $this->load->view('admin/approval_details', $data);
+                $this->load->view('admin/footer');
+            } else {
+                redirect(base_url() . 'admin/approve');
+            }
+        } else {
+            redirect(base_url() . 'admin/approve');
+        }
+    }
+    public function submit_verified_business()
+    {
+        $this->verify_session();
+        if ($this->input->post('submit')) {
+            $this->load->model('admin_model');
+            $b_images = $this->admin_model->get_bid_images($this->input->post('business_id'));
+            $ar = explode(',',$this->input->post('addon_img_alt'));
+        
+            $cput = count($ar);
+            
+            $i=0;
+            foreach ($b_images->result() as $row){
+                if($i <= $cput-1){
+                    // echo $row->image_url.'    '.$ar[$i];
+                    $this->admin_model->ins_b_img_alt($row->image_name,$ar[$i]);
+                    $i++;
+                }
+            }
+            
+            $array = array(
+                'business_id'=>$this->input->post('business_id'),
+                'business_name'=>$this->input->post('business_name'),
+                'meta_title'=>$this->input->post('meta_title'),
+                'meta_desc'=>$this->input->post('meta_desc'),
+                'category_id'=>$this->input->post('category_id'),
+                'location'=>$this->input->post('location'),
+                'sub_location'=>$this->input->post('sub_location'),
+                'about'=>$this->input->post('about'),
+                'mobno'=>$this->input->post('mobno'),
+                'email'=>$this->input->post('email'),
+                'main_image'=>$this->input->post('main_image'),
+                'main_img_name'=>$this->input->post('main_img_name'),
+                'main_img_alt'=>$this->input->post('main_img_alt'),
+                'features'=>$this->input->post('features'),
+                'address'=>$this->input->post('address'),
+                'map_loc'=>$this->input->post('map_loc'),
+                'website'=>$this->input->post('website'),
+                'facebook'=>$this->input->post('facebook'),
+                'instagram'=>$this->input->post('instagram'),
+                'twitter'=>$this->input->post('twitter'),
+                'opening_hours'=>$this->input->post('opening_hours'),
+                'price_range'=>$this->input->post('price_range'),
+                'rating'=>$this->input->post('rating'),
+                'is_verified'=>true,
+            );
+            $this->admin_model->insert_business($array,$this->input->post('business_id'));
+            $this->admin_model->update_verified($this->input->post('business_id'));
+            redirect(base_url() . 'admin/approve');
+
+        } else {
+            redirect(base_url() . 'admin/approve');
+        }
+    }
+    
     //////////////////////////////////// SESSION END   //////////////////
     public function logout()
     {

@@ -5,32 +5,18 @@
     </div>
     <h4 class="heading-2"></h4>
     <section class="sec">
+
         <?php foreach ($approval->result() as $row) { ?>
             <div class="row " style="display:flex;justify-content:space-between;margin-bottom:3px;">
                 <div class="name">
                     <?php echo $row->business_name; ?>
                 </div>
                 <div class="opt">
-                    <a href="">Verify Now</a>
+                    <a href="<?php echo base_url() ?>admin/verify_approval/<?php echo $row->business_id ?>">Verify Now</a>
                 </div>
             </div>
         <?php } ?>
-        <div class="row " style="display:flex;justify-content:space-between;margin-bottom:3px;">
-            <div class="name">
-                Business Name
-            </div>
-            <div class="opt">
-                <a href="">Verify Now</a>
-            </div>
-        </div>
-        <div class="row " style="display:flex;justify-content:space-between;margin-bottom:3px;">
-            <div class="name">
-                Business Name
-            </div>
-            <div class="opt">
-                <a href="">Verify Now</a>
-            </div>
-        </div>
+
     </section>
 </div>
 

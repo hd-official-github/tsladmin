@@ -10,6 +10,8 @@
     <meta content="Webflow" name="generator" />
     <link href="<?php echo base_url() ?>assets/css/digitals-initial-project-54ef45.webflow.765a453b2.css" rel="stylesheet" type="text/css" />
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
     <script type="text/javascript">
         WebFont.load({
             google: {
